@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<% var pageName = `管理システム トップ` %>
+
+<head>
+	<% var opt = {
+		pageName: pageName,
+	}; %>
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/head-tag`, opt) %>
+</head>
+
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+
+		<!-- ヘッダー -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/header`, opt) %>
+
+		<!-- Main Sidebar Container -->
+		<% var opt = {
+			userName: session.name,
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/sidebar`, opt) %>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" style="min-height: auto;">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0">管理システム ホーム</h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+							</ol>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xs-3">
+							<div class="list-group">
+								<label class="list-group-item active text-center mb-0">クライアントデータ管理</label>
+								<a href="/admin/10-parents/index/" class="list-group-item">保護者・生徒</a>
+								<a href="/admin/20-teacher/index/" class="list-group-item">先生</a>
+								<a href="/admin/30-class/index/" class="list-group-item">授業コマ</a>
+							</div>
+						</div>
+					</div>
+					<!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/footer`, opt) %>
+	</div>
+	<!-- ./wrapper -->
+
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/foot-tag`, opt) %>
+</body>
+
+</html>

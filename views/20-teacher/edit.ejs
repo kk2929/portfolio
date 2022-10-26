@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<% var pageName = `先生：編集` %>
+
+<head>
+	<% var opt = {
+		pageName: pageName,
+	}; %>
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/head-tag`, opt) %>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+
+		<!-- ヘッダー -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/header`, opt) %>
+
+		<!-- Main Sidebar Container -->
+		<% var opt = {
+			userName: session.name,
+			activeId: "teacher", 
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/sidebar`, opt) %>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" style="min-height: auto;">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0"><%= pageName %></h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<!-- <li class="breadcrumb-item"><a href="/admin/">ホーム</a></li> -->
+								<li class="breadcrumb-item"><a href="/admin/<%= filepath %>/index/">先生：一覧</a></li>
+								<li class="breadcrumb-item active">編集</li>
+							</ol>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="mb-2">
+						<!-- <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-column"> -->
+						<!-- <button class="btn btn-success" onclick="location.href='/admin/student/add/'">生徒登録</button> -->
+					</div>
+					<div class="row" style="width: max-content;">
+						<!-- <div class="col-12 col-sm-6"> -->
+						<div class="card card-primary card-outline card-outline-tabs">
+							<div class="card-header p-0 border-bottom-0">
+								<ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+									<!-- タブのヘッダー -->
+									<li class="nav-item">
+										<a class="nav-link active" id="custom-tabs-four-parents-tab" data-toggle="pill" href="#custom-tabs-four-parents" role="tab" aria-controls="custom-tabs-four-parents" aria-selected="true">先生</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" id="custom-tabs-four-class-tab" data-toggle="pill" href="#custom-tabs-four-class" role="tab" aria-controls="custom-tabs-four-class" aria-selected="true">シフト</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" id="custom-tabs-four-kobetu-tab" data-toggle="pill" href="#custom-tabs-four-kobetu" role="tab" aria-controls="custom-tabs-four-kobetu" aria-selected="true">個別授業</a>
+									</li>
+								</ul>
+							</div>
+							<div class="card-body">
+								<div class="tab-content" id="custom-tabs-four-tabContent">
+									<!-- 先生========================================================================== -->
+									<div class="tab-pane fade show active" id="custom-tabs-four-parents" role="tabpanel" aria-labelledby="custom-tabs-four-parents-tab">
+										<span>●先生</span>
+										<form method="post" action="" class="h-adr" name="teacher_form">
+											<table class="table table-bordered mb-1 _table">
+												<tbody>
+													<tr>
+														<td><span>苗字/名前</span></td>
+														<td>
+															<input type="text" class="mr-3" name="family_name" autofocus required value="<%= rows.family_name %>">
+															<input type="text" name="first_name" required value="<%= rows.first_name %>">
+														</td>
+													</tr>
+													<tr>
+														<td><span>カナ苗字/名前</span></td>
+														<td>
+															<input type="text" class="mr-3" name="kana_family_name" required value="<%= rows.kana_family_name %>">
+															<input type="text" name="kana_first_name" required value="<%= rows.kana_first_name %>">
+														</td>
+													</tr>
+													<tr>
+														<td><span>性別</span></td>
+														<td style="display: flex;">
+															<div class="radio-btns">
+																<label>男<input type="radio" name="gender" value="m" required></label>
+																<label>女<input type="radio" name="gender" value="f"></label>
+																<label>その他<input type="radio" name="gender" value="o"></label>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td><span>メールアドレス</span></td>
+														<td><input type="email" name="mail" style="width: 300px;" value="<%= rows.mail %>"></td>
+													</tr>
+													<tr>
+														<td><span>電話番号</span></td>
+														<td><input type="tel" name="tel" value="<%= rows.tel %>"></td>
+													</tr>
+													<tr>
+														<td><span>備考</span></td>
+														<td><textarea name="remarks" rows="6" cols="70"><%= rows.remarks %></textarea></td>
+													</tr>
+												</tbody>
+											</table>
+
+											<div>
+												<!-- <button class="btn btn-success" type="button" onclick="submitForm()">
+													<i class="fa fa-lg fa-circle-check"></i> 更新
+												</button> -->
+												<button class="btn btn-success" type="submit" onclick="return editConfirm()">
+													<i class="fa fa-lg fa-circle-check"></i> 更新
+												</button>
+												<button class="btn btn-warning btn-sm float-sm-right" type="submit" formaction="./delete/" onclick="return deleteConfirm('parents')">
+													<i class="fa fa-lg fa-trash-can"></i> 削除
+												</button>
+											</div>
+										</form>
+									</div>
+									<!-- シフト================================================================== -->
+									<div class="tab-pane fade" id="custom-tabs-four-class" role="tabpanel" aria-labelledby="custom-tabs-four-class-tab">
+										<!-- <span>●シフト</span> -->
+									</div>
+									<!-- 個別授業======================================================================== -->
+									<div class="tab-pane fade" id="custom-tabs-four-kobetu" role="tabpanel" aria-labelledby="custom-tabs-four-kobetu-tab">
+										<span>●個別授業</span>
+										<form method="post" action="" class="h-adr" name="kobetu_form">
+											<table class="table table-bordered mb-1 _table">
+												<tbody>
+													<tr>
+														<td><span>備考</span></td>
+														<td><textarea name="remarks" rows="6" cols="70"><%= rows.remarks %></textarea></td>
+													</tr>
+												</tbody>
+											</table>
+											<div>
+												<!-- <button class="btn btn-success" type="button" onclick="submitForm()">
+																															<i class="fa fa-lg fa-circle-check"></i> 更新
+																														</button> -->
+												<button class="btn btn-success" type="submit" onclick="return editConfirm()">
+													<i class="fa fa-lg fa-circle-check"></i> 更新
+												</button>
+												<button class="btn btn-warning btn-sm float-sm-right" type="submit" formaction="./delete/" onclick="return deleteConfirm('kobetu')">
+													<i class="fa fa-lg fa-trash-can"></i> 削除
+												</button>
+											</div>
+										</form>
+									</div>
+									<!-- タブ -->
+								</div>
+							</div>
+							<!-- /.card -->
+						</div>
+					</div>
+					<!-- /.row -->
+				</div>
+				<!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/footer`, opt) %>
+	</div>
+	<!-- ./wrapper -->
+
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/foot-tag`, opt) %>
+
+	<!-- フォームの必須入力 -->
+	<script src="/admin/javascripts/99-etc/required-form.js"></script>
+
+	<script>
+		window.addEventListener("DOMContentLoaded", () => {
+			$(`input:radio[name="gender"]`).val(["<%= rows.gender %>"]);
+
+			$(`select[name="start_time_h"]`).val([18]);
+			$(`select[name="end_time_h"]`).val([19]);
+		});
+
+		// アップロード処理ここから
+		/* フォーム送信 */
+		function clickSubmit() {
+			submitTeacherForm()
+		}
+		/* .js の "/" へ。フォーム全てを送信 */
+		function submitTeacherForm() {
+			document.teacher_form.submit();
+		}
+		// フォーム送信処理ここまで
+
+		function editConfirm() {
+			if (window.confirm("変更した内容を確定しますか？")) return true;
+			else return false;
+		}
+		function deleteConfirm(kind = null) {
+			var str = "本当に削除しますか？"
+			if (kind == "parents") str += "\n\nこの先生の生徒も全て削除されます。"
+			if (window.confirm(str)) return true; // OKで削除を実行
+			else return false; // キャンセルで削除を中止
+		}
+	</script>
+</body>
+
+</html>

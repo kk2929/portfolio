@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<% var pageName = `保護者：新規登録` %>
+
+<head>
+	<% var opt = {
+		pageName: pageName,
+	}; %>
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/head-tag`, opt) %>
+
+	<!-- 郵便番号 自動入力 -->
+	<script src="https://yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+
+		<!-- ヘッダー -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/header`, opt) %>
+
+		<!-- Main Sidebar Container -->
+		<% var opt = {
+			userName: session.name,
+			activeId: "parents", 
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/sidebar`, opt) %>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" style="min-height: auto;">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0"><%= pageName %></h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<!-- <li class="breadcrumb-item"><a href="/admin/">ホーム</a></li> -->
+								<li class="breadcrumb-item"><a href="/admin/<%= filepath %>/index/">保護者：一覧</a></li>
+								<li class="breadcrumb-item active">新規登録</li>
+							</ol>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row" style="width: max-content;">
+
+						<form method="post" action="" class="h-adr" style="margin: 0 0 20px 10px;">
+							<table class="table table-bordered _table">
+								<tbody>
+									<tr>
+										<td><span>苗字/名前</span></td>
+										<td>
+											<input type="text" class="mr-3" name="family_name" autofocus required>
+											<input type="text" name="first_name" required>
+										</td>
+									</tr>
+									<tr>
+										<td><span>カナ苗字/名前</span></td>
+										<td>
+											<input type="text" class="mr-3" name="kana_family_name" required>
+											<input type="text" name="kana_first_name" required>
+										</td>
+									</tr>
+									<tr>
+										<td><span>続柄</span></td>
+										<td>
+											<input type="text" name="relationship" list="relationship_list">
+											<datalist id="relationship_list">
+												<option value="父">
+												<option value="母">
+												<option value="祖父">
+												<option value="祖母">
+												<option value="その他">
+											</datalist>
+										</td>
+									</tr>
+									<!-- !未修整：他人との重複を防ぐ -->
+									<tr>
+										<td><span>ログインID</span></td>
+										<td>
+											<input type="text" name="login_id" required>
+										</td>
+									</tr>
+									<tr>
+										<td><span>パスワード</span></td>
+										<td>
+											<input type="text" name="password" required>
+										</td>
+									</tr>
+									<tr>
+										<td><span>メールアドレス</span></td>
+										<td><input type="email" name="mail" style="width: 300px;"></td>
+									</tr>
+									<tr>
+										<td><span>電話番号</span></td>
+										<td><input type="tel" name="tel"></td>
+									</tr>
+									<tr>
+										<td><span>郵便番号</span></td>
+										<td>
+											<span class="p-country-name" style="display:none;">Japan</span>
+											<input type="text" name="post_code" class="p-postal-code" minlength="7" maxlength="8">
+										</td>
+									</tr>
+									<tr>
+										<td><span>住所</span></td>
+										<td>
+											<div>
+												<input type="text" name="address1" style="width: 250px;" class="p-region p-locality p-street-address p-extended-address" readonly>
+											</div>
+											<div>
+												<input type="text" name="address2" style="width: 500px;">
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td><span>契約状態</span></td>
+										<td style="display: flex;">
+											<div class="radio-btns" onchange="onSwitch('state')">
+												<label>未契約<input type="radio" name="state" value="1" required checked></label>
+												<label>契約中<input type="radio" name="state" value="2"></label>
+												<label>一時休会<input type="radio" name="state" value="3"></label>
+												<label>契約満了<input type="radio" name="state" value="4"></label>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td><span>契約日</span></td>
+										<td><input type="date" name="contract_date"></td>
+									</tr>
+									<tr>
+										<td><span>契約満了日</span></td>
+										<td><input type="date" name="contract_expiration_date"></td>
+									</tr>
+									<tr>
+										<td><span>備考</span></td>
+										<td><textarea name="remarks" rows="6" cols="70"></textarea></td>
+
+									</tr>
+								</tbody>
+							</table>
+
+							<div>
+								<button class="btn  btn-success" type="submit" onclick="return addConfirm()">
+									<i class="fa fa-lg fa-circle-check"></i> 新規登録
+								</button>
+							</div>
+						</form>
+
+					</div>
+					<!-- /.row -->
+				</div>
+				<!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/footer`, opt) %>
+	</div>
+	<!-- ./wrapper -->
+
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/foot-tag`, opt) %>
+
+	<!-- フォームの必須入力 -->
+	<script src="/admin/javascripts/99-etc/required-form.js"></script>
+
+	<script>
+		window.addEventListener("DOMContentLoaded", () => {
+		});
+		/* ラジオボタンによる表示切り替え */
+		function onSwitch(name) {
+			var $radio = $(`input[name="${name}"`)
+			console.log($radio);
+			var $content = $(`.${name}-content`)
+			// フォームの値リセット
+			$(`.${name}-value`).val("");
+
+			for (var i in $radio) {
+				var r = $radio.eq(i)
+				var c = $content.eq(i)
+
+				if (r.is(':checked')) {
+					c.css("display", "");
+				} else {
+					c.css("display", "none");
+				}
+			}
+		}
+
+		function addConfirm() {
+			if (window.confirm("保護者を新規登録しますか？")) return true;
+			else return false;
+		}
+	</script>
+</body>
+
+</html>

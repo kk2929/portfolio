@@ -1,0 +1,64 @@
+<head>
+	Font Awesome
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+</head>
+
+<div class="modal-dialog modal-sm">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h4 class="modal-title">保護者 検索</h4>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<form class="" id="submit_form" method="post">
+			<!-- 検索モーダル 内容 -->
+			<div class="modal-body">
+				<!-- <div>
+					<p>検索フォーム</p>
+					<input id="searchBox" name="searchStr" placeholder="検索フォーム">
+					<p>現在検索ワード：<%= filterData.searchStr %></p>
+				</div> -->
+				<div class="content">
+					<div class="row">
+						<div class="col-6 text-right">
+							<p>契約状態(保護者)　:</p>
+						</div>
+						<div class="col-6">
+							<select name="state">
+								<option value="">全て</option>
+								<option value="1">未契約</option>
+								<option value="2">契約中</option>
+								<option value="3">一時休会</option>
+								<option value="4">契約満了</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<!-- <input class="reset-btn" type="button" value="全条件リセット" onclick="ResetForm()"> -->
+			</div>
+			<div class="modal-footer justify-content-between">
+				<button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+				<button type="button" class="btn btn-success" onclick="SubmitForm()">
+					<i class="fa fa-lg fa-magnifying-glass"></i> 検索
+				</button>
+			</div>
+		</form>
+	</div>
+	<!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+
+<script type="text/javascript">
+	function SubmitForm() {
+		var target = document.getElementById("submit_form");
+		target.method = "post";
+		target.submit();
+	}
+
+	window.addEventListener("DOMContentLoaded", () => {
+		$('[name="state"]').val(["<%= filterData.state %>"]);
+		// $("#searchBox").focus().val("<%= filterData.searchStr %>");
+	});
+</script>

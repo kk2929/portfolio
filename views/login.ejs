@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<% var pageName = `管理システム(テスト) ログイン` %>
+
+<head>
+	<% var opt = {
+		pageName: pageName,
+	}; %>
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/head-tag`, opt) %>
+</head>
+
+<body class="hold-transition login-page">
+	<div class="login-box">
+		<div class="login-logo">
+			管理システム(テスト)<br>ログイン
+		</div>
+		<!-- /.login-logo -->
+		<div class="card">
+			<div class="card-body login-card-body">
+
+				<div style="height: 50px; padding: auto; color: red;"><%- message %></div>
+
+				<form action="/admin/login/" method="post">
+					<div class="input-group mb-3">
+						<input type="text" class="form-control" name="login_id" placeholder="ログインID">
+						<div class="input-group-append">
+							<div class="input-group-text">
+							</div>
+						</div>
+					</div>
+					<div class="input-group mb-3">
+						<input type="password" class="form-control" name="password" placeholder="パスワード">
+						<div class="input-group-append">
+							<div class="input-group-text">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<!-- /.col -->
+						<div class="col-4">
+						</div>
+						<div class="col-4">
+							<button type="submit" class="btn btn-primary btn-block">ログイン</button>
+						</div>
+						<!-- /.col -->
+					</div>
+				</form>
+
+			</div>
+			<!-- /.login-card-body -->
+		</div>
+	</div>
+	<!-- /.login-box -->
+
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/foot-tag`, opt) %>
+</body>
+
+</html>

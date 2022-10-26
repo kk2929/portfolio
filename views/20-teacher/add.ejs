@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<% var pageName = `先生：新規登録` %>
+
+<head>
+	<% var opt = {
+		pageName: pageName,
+	}; %>
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/head-tag`, opt) %>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+
+		<!-- ヘッダー -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/header`, opt) %>
+
+		<!-- Main Sidebar Container -->
+		<% var opt = {
+			userName: session.name,
+			activeId: "teacher", 
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/sidebar`, opt) %>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" style="min-height: auto;">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0"><%= pageName %></h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="/admin/<%= filepath %>/index/">先生：一覧</a></li>
+								<li class="breadcrumb-item active">新規登録</li>
+							</ol>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row" style="width: max-content;">
+
+						<form method="post" action="" class="h-adr" style="margin: 0 0 20px 10px;">
+							<table class="table table-bordered _table">
+								<tbody>
+									<tr>
+										<td><span>苗字/名前</span></td>
+										<td>
+											<input type="text" class="mr-3" name="family_name" autofocus required>
+											<input type="text" name="first_name" required>
+										</td>
+									</tr>
+									<tr>
+										<td><span>カナ苗字/名前</span></td>
+										<td>
+											<input type="text" class="mr-3" name="kana_family_name" required>
+											<input type="text" name="kana_first_name" required>
+										</td>
+									</tr>
+									<tr>
+										<td><span>性別</span></td>
+										<td style="display: flex;">
+											<div class="radio-btns">
+												<label>男<input type="radio" name="gender" value="m" required></label>
+												<label>女<input type="radio" name="gender" value="f"></label>
+												<label>その他<input type="radio" name="gender" value="o"></label>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td><span>メールアドレス</span></td>
+										<td><input type="email" name="mail" style="width: 300px;"></td>
+									</tr>
+									<tr>
+										<td><span>電話番号</span></td>
+										<td><input type="tel" name="tel"></td>
+									</tr>
+									<tr>
+										<td><span>備考</span></td>
+										<td><textarea name="remarks" rows="6" cols="70"></textarea></td>
+									</tr>
+								</tbody>
+							</table>
+
+							<div>
+								<button class="btn  btn-success" type="submit" onclick="return addConfirm()">
+									<i class="fa fa-lg fa-circle-check"></i> 新規登録
+								</button>
+							</div>
+						</form>
+					</div>
+					<!-- /.row -->
+				</div>
+				<!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/footer`, opt) %>
+	</div>
+	<!-- ./wrapper -->
+
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/foot-tag`, opt) %>
+
+	<!-- フォームの必須入力 -->
+	<script src="/admin/javascripts/99-etc/required-form.js"></script>
+
+	<script>
+		function addConfirm() {
+			if (window.confirm("先生を新規登録しますか？")) return true;
+			else return false;
+		}
+	</script>
+</body>
+
+</html>

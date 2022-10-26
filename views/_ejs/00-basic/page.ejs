@@ -1,0 +1,36 @@
+<div class="pagenav wid1">
+	<span>&lt;&lt;</span>
+	<% var pageSelect = 5; %>
+	<% var r = rowLimit; %>
+
+	<% if (pg > pageSelect + 2) { %>
+	<span>　<a href="<%= url1 + 1 + url2 %>"> 1-<%= r %> </a>　…</span>
+	<% } else if (pg > 1) { %>
+	<span>　<a href="<%= url1 + 1 + url2 %>"> 1-<%= r %> </a></span>
+	<% } %>
+
+	<% for (let i = pageSelect ; i >= 1; i--) {%>
+	<% if (pg - i > 1) { %>
+	<span>　<a href="<%= url1 + (pg - i) + url2 %>"><%= (pg - i - 1) * r + 1%>-<%= (pg - i) * r %></a></span>
+	<% } %>
+	<% } %>
+
+	<% var p = pg * r %>
+	<% if (p > rowCo) p = rowCo %>
+
+	<span>　<%= (pg - 1) * r + 1%>-<%= p %></span>
+
+	<% for (let i = 1; i <= pageSelect; i++) {%>
+	<% if (pg + i > pgco - 1) { %>
+	<% break; %>
+	<% } %>
+	<span>　<a href="<%= url1 + (pg + i) + url2 %>"><%= (pg + i - 1) * r + 1%>-<%= (pg + i) * r %></a></span>
+	<% } %>
+
+	<% if (pg < pgco - pageSelect - 1) { %>
+	<span>　…　<a href="<%= url1 + pgco + url2 %>"><%= (pgco - 1) * r + 1%>-<%= rowCo %></a></span>
+	<% } else if (pg < pgco) { %>
+	<span>　<a href="<%= url1 + pgco + url2 %>"><%= (pgco - 1) * r + 1%>-<%= rowCo %></a></span>
+	<% } %>
+	<span>　&gt;&gt;</span>
+</div>

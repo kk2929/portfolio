@@ -1,0 +1,57 @@
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+	<!-- Sidebar -->
+	<div class="sidebar">
+		<!-- Sidebar user panel (optional) -->
+		<div class="user-panel mt-3 pb-3 mb-3 d-flex">
+			<div class="image">
+				<img src="/admin/images/user.png" class="img-circle elevation-2" alt="User Image">
+			</div>
+			<div class="info">
+				<a href="/admin/" class="d-block"><%= locals.userName %></a>
+			</div>
+		</div>
+
+		<!-- Sidebar Menu -->
+		<nav class="mt-2">
+			<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+				<!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+				<li class="nav-item menu-open">
+					<a href="#" class="nav-link active">
+						<i class="nav-icon fas fa-tachometer-alt"></i>
+						<p>
+							データ管理
+							<i class="right fas fa-angle-left"></i>
+						</p>
+					</a>
+					<ul class="nav nav-treeview">
+						<li class="nav-item">
+							<a id="parents" href="/admin/10-parents/index/" class="nav-link">
+								<i class="far fa-circle nav-icon"></i>
+								<p>保護者・生徒</p>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a id="teacher" href="/admin/20-teacher/index/" class="nav-link">
+								<i class="far fa-circle nav-icon"></i>
+								<p>先生</p>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a id="class" href="/admin/30-class/index/" class="nav-link">
+								<i class="far fa-circle nav-icon"></i>
+								<p>授業コマ</p>
+							</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+		<!-- /.sidebar-menu -->
+	</div>
+	<!-- /.sidebar -->
+
+	<script>
+		var activeId = "<%= locals.activeId %>"
+		if (activeId) $(`#${activeId}`).addClass("active")
+	</script>
+</aside>

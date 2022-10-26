@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+
+<% var pageName = `保護者` %>
+
+<head>
+	<% var opt = {
+		pageName: pageName,
+	}; %>
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/head-tag`, opt) %>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+
+		<!-- ヘッダー -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/header`, opt) %>
+
+		<!-- Main Sidebar Container -->
+		<% var opt = {
+			userName: session.name,
+			activeId: "parents", 
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/sidebar`, opt) %>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" style="min-height: auto;">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0"><%= pageName %></h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<div class="float-sm-right">
+								<button class="btn btn-block btn-success" onclick="location.href='/admin/<%= filepath %>/add/'">新規登録</button>
+							</div>
+							<!-- <ol class="breadcrumb float-sm-right"> -->
+
+							<!-- </ol> -->
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="mb-2">
+						<button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-column">
+							表示列切り替え
+						</button>
+						<button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#modal-search">
+							保護者 検索
+						</button>
+					</div>
+					<div class="modal fade" id="modal-column">
+						<div class="modal-dialog modal-sm">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 class="modal-title">表示列切り替え</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<!-- 列表示切替のチェックボックス -->
+									<% for(var i in column) { %>
+									<% var e = column[i] %>
+									<div>
+										<% if (i == 6 || i == 13) { %>
+										<span>===生徒の情報===</span><br>
+										<% } %>
+										<% if (6 <= i && i <= 12) { %>
+										<span>　</span>
+										<% } %>
+										<label>
+											<input class="row_display-checkbox" type="checkbox" id="<%= i %>_check"><%= e[0].replace("<br>", "") %>
+										</label>　
+									</div>
+									<% } %>
+									<div>
+										<button class="reset-btn row_display-delete">初期設定に戻す</button>
+										<button class="reset-btn row_display-all">全て表示</button>
+									</div>
+								</div>
+								<div class="modal-footer justify-content-between">
+									<button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+									<!-- <button type="button" class="btn btn-primary">OK</button> -->
+								</div>
+							</div>
+							<!-- /.modal-content -->
+						</div>
+						<!-- /.modal-dialog -->
+					</div>
+					<!-- /.modal -->
+					<!-- 検索のモーダル -->
+					<div class="modal fade" id="modal-search">
+						<!-- 検索モーダル 内容 -->
+						<%- include(`${RoutesPath}/../views/_ejs/10-parents/search`, {filterData: filterData}) %>
+					</div>
+					<!-- /.modal -->
+
+					<!-- <div class="row"> -->
+					<div class="row" style="width: max-content;">
+						<table class="table table-sm table-bordered table-hover _table">
+							<thead>
+								<tr>
+									<!-- 列表示切替のチェックボックス -->
+									<% for(var i in column) { %>
+									<% var e = column[i] %>
+									<th><%= e[0] %></th>
+									<% } %>
+								</tr>
+							</thead>
+							<tbody>
+								<% for (var i = 0; i < rows.length; i++) { %>
+								<% i = Number(i) %>
+								<% var e = rows[i] %>
+								<% var id = e.p_id %>
+
+								<% var arr = [e] %>
+								<% if (e.children_num == 0) {
+									arr = []
+								}; %>
+								<% while (rows[i+1] && id == rows[i+1].p_id) {
+									i++
+									e = rows[i] 
+									arr.push(e) 
+								}; %>
+								<tr>
+									<td>
+										<button class="btn btn-block btn-outline-success btn-sm" onclick="location.href='/admin/<%= filepath %>/edit/<%= e.p_id %>/'">編集</button>
+									</td>
+									<td>
+										<button class="btn btn-block btn-outline-success btn-sm" onclick="location.href='/admin/<%= filepath %>/edit-schedules/<%= e.p_id %>/'">授業予定</button>
+									</td>
+									<td><%= `${e.family_name} ${e.first_name}` %></td>
+									<td><%= e.relationship %></td>
+									<td><%= e.login_id %></td>
+									<td><%= e.password %></td>
+									<td><%= e.children_num %></td>
+									<td>
+										<% arr.forEach(e => { %>
+										<%= e.s_first_name %>
+										<!-- <%= e.s_family_name %> <%= e.s_first_name %> -->
+										<br>
+										<% }); %>
+									</td>
+									<td>
+										<% arr.forEach(e => { %>
+										<% if (e.gender == "m") { %>
+										男
+										<% } else if (e.gender == "f") { %>
+										女
+										<% } else if (e.gender == "e") { %>
+										その他
+										<% } else { %>
+										<span style="color: red;">不正な値</span>
+										<% } %>
+										<br>
+										<% }); %>
+									</td>
+									<td>
+										<% arr.forEach(e => { %>
+										<%= e.grade %> 年
+										<br>
+										<% }); %>
+									</td>
+									<td>
+										<% arr.forEach(e => { %>
+										<% var d = e.birthday %>
+										<% d = d ? d.toFormat('YYYY年MM月DD日') :'' %>
+										<span style="height: 50px;"><%= d %></span>
+										<br>
+										<% }); %>
+									</td>
+									<td>
+										<% arr.forEach(e => { %>
+										<%= e.school %>
+										<br>
+										<% }); %>
+									</td>
+									<td>
+										<% arr.forEach(e => { %>
+										<% if (e.s_state == 1) { %>
+										未契約
+										<% } else if (e.s_state == 2) { %>
+										<span class="text-success">契約中</span>
+										<% } else if (e.s_state == 3) { %>
+										<span class="text-muted">一時休会</span>
+										<% } else if (e.s_state == 4) { %>
+										契約満了
+										<% } else { %>
+										<span style="color: red;">不正な値</span>
+										<% } %>
+										<br>
+										<% }); %>
+									</td>
+									<td>
+										<% arr.forEach(e => { %>
+										<% if (e.s_state == 2) { %>
+										<% if (e.course == 1) { %>
+										集団自学ライト
+										<% } else if (e.course == 2) { %>
+										集団自学
+										<% } else if (e.course == 3) { %>
+										個別学習
+										<% } else { %>
+										<span style="color: red;">不正な値</span>
+										<% } %>
+										<% } else { %>
+										<span class="">　-　</span>
+										<% } %>
+										<br>
+										<% }); %>
+									</td>
+									<td><%= e.mail %></td>
+									<td><%= e.tel %></td>
+									<td><%= e.post_code %></td>
+									<td><%= e.address1 %><br><%= e.address2 %></td>
+									<td>
+										<% if (e.state == 1) { %>
+										未契約
+										<% } else if (e.state == 2) { %>
+										契約中
+										<% } else if (e.state == 3) { %>
+										一時休会
+										<% } else if (e.state == 4) { %>
+										契約満了
+										<% } else { %>
+										<span style="color: red;">不正な値</span>
+										<% }; %>
+									</td>
+
+									<% var d = e.contract_date %>
+									<% d = d ? d.toFormat('YYYY-MM-DD') :'' %>
+									<td><%= d %></td>
+
+									<% var d = e.contract_expiration_date %>
+									<% d = d ? d.toFormat('YYYY-MM-DD') :'' %>
+									<td><%= d %></td>
+									<td style="max-width: 200px;">
+										<pre style="white-space: pre-wrap;"><%= e.remarks %></pre>
+									</td>
+								</tr>
+								<% }; %>
+							</tbody>
+						</table>
+					</div>
+					<!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/footer`, opt) %>
+	</div>
+	<!-- ./wrapper -->
+
+	<!-- 表示切り替えチェックボックス -->
+	<script type="text/javascript">
+		var cookieName = "parents-column"
+		var column = JSON.parse('<%- JSON.stringify(column) %>');
+		var defaultState = "["
+		for (const e of column) {
+			if (e[1]) defaultState += 1 + ","
+			else defaultState += 0 + ","
+		}
+		defaultState = defaultState.slice(0, -1)
+		defaultState += "]"
+		console.log(defaultState);
+	</script>
+	<script src="/admin/javascripts/00-basic/row-display.js"></script>
+
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/foot-tag`, opt) %>
+</body>
+
+</html>

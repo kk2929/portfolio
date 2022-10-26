@@ -1,0 +1,29 @@
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+	<!-- ヘッダー左 -->
+	<ul class="navbar-nav">
+		<!-- ハンバーガーメニュー -->
+		<li class="nav-item">
+			<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+		</li>
+		<li class="nav-item d-none d-sm-inline-block">
+			<a href="/admin/" class="nav-link">ホーム</a>
+		</li>
+	</ul>
+
+	<!-- ヘッダー右 -->
+	<ul class="navbar-nav ml-auto">
+		<li class="nav-item">
+			<input class="logout-btn" type="button" onclick="confirmLogout()" value="ログアウト">
+		</li>
+	</ul>
+</nav>
+
+<script>
+	//フォーム送信確認
+	function confirmLogout() {
+		if (window.confirm("ログアウトしますか？")) {
+			location.href = '/admin/logout/'; // ログアウト処理のページへ
+			// window.alert("ログアウトしました")
+		}
+	}
+</script>

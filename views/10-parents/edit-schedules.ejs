@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+
+<% var pageName = `授業予定：確認・編集` %>
+
+<head>
+	<% var opt = {
+		pageName: pageName,
+	}; %>
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/head-tag`, opt) %>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+
+		<!-- ヘッダー -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/header`, opt) %>
+
+		<!-- Main Sidebar Container -->
+		<% var opt = {
+			userName: session.name,
+			activeId: "parents", 
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/sidebar`, opt) %>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" style="min-height: auto;">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0"><%= pageName %></h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<!-- <li class="breadcrumb-item"><a href="/admin/">ホーム</a></li> -->
+								<li class="breadcrumb-item"><a href="/admin/<%= filepath %>/index/">保護者：一覧</a></li>
+								<li class="breadcrumb-item active"><%= pageName %></li>
+							</ol>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<!-- <div class="row" style="width: max-content;"> -->
+					<div class="row">
+						<div class="card card-primary card-outline card-outline-tabs p-2">
+							<div class="m-2 d-flex justify-content-center align-items-center">
+								<button id="prev" class="btn btn-sm btn-outline-secondary" type="button">前の月</button>
+								<div id="date-display" class="mx-3" style="font-size: 24px;"></div>
+								<button id="next" class="btn btn-sm btn-outline-secondary" type="button">次の月</button>
+							</div>
+							<div id="calendar"></div>
+							<!-- /.card -->
+						</div>
+					</div>
+					<!-- /.row -->
+				</div>
+				<!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/footer`, opt) %>
+	</div>
+	<!-- ./wrapper -->
+
+	<!-- 授業予定 のモーダル (modal00) -->
+	<div class="modal fade" id="modal00">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">授業の予定</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div id="modal00-date" class="mb-2" style="font-size: 16px;"></div>
+					<div id="modal00-content"></div>
+					<div class="mt-3">
+						<button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal01">
+							授業を予約する
+						</button>
+					</div>
+				</div>
+				<div class="modal-footer justify-content-between">
+					<button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 授業を予約する のモーダル (modal01) -->
+	<div class="modal fade" id="modal01">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">授業の予約</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form method="post" id="modal01-form" name="form0">
+						<div class="mb-3">
+							<label class="form-label">お子様のお名前</label>
+							<select class="form-select" name="s_id">
+								<% for (let e of students ) { %>
+								<option value="<%= e.s_id %>"><%= e.s_first_name %> さん</option>
+								<% } %>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">授業開始時刻</label>
+							<div class="row align-items-center g-3">
+								<span id="modal01-date" class="col-auto" style="font-size: 16px;"></span>
+								<select class="form-select col" name="c_id" required>
+									<!-- <option>開始時刻を選択してください</option> -->
+								</select>
+							</div>
+						</div>
+						<div>
+							<button class="btn btn-success ms-3" type="button" onclick="clickAdd()">
+								<i class="fa fa-lg fa-circle-check"></i> 予約する
+							</button>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer justify-content-between">
+					<button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 予定の確認 のモーダル (modal02) -->
+	<div class="modal fade" id="modal02">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">予定の確認・取り消し</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label class="form-label">お子様のお名前</label>
+						<span class="col-auto" id="modal02-student-name" style="font-size: 16px;"></span>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">授業開始時刻</label>
+						<span class="col-auto" id="modal02-date" style="font-size: 16px;"></span>
+					</div>
+					<div>
+						<form method="post" id="modal02-form">
+							<input type="hidden" name="reserve_id">
+							<div class="mt-3">
+								<button class="btn btn-warning ms-3" type="button" onclick="clickCancel()">
+									<i class="fa fa-lg fa-trash"></i> 予定を取り消す
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer justify-content-between">
+					<button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/foot-tag`, opt) %>
+
+	<script>
+		/* フォーム送信 */
+		function clickAdd() {
+			if (!$('#modal01-form')[0].reportValidity()) return
+			if (!window.confirm("授業を予約します。\nよろしいですか？")) return;
+
+			var form = document.querySelector("#modal01-form");
+			form.action = 'add';
+			form.submit();
+		}
+
+		function clickCancel() {
+			if (!window.confirm("予約を取り消します。\nよろしいですか？")) return;
+
+			var form = document.querySelector("#modal02-form");
+			form.action = 'cancel';
+			form.submit();
+		}
+	</script>
+
+	<!-- <script src="/admin/javascripts/00-basic/calendar.js"></script> -->
+	<!-- api -->
+	<script src="/admin/javascripts/02-api/class.js"></script>
+	<!-- カレンダー -->
+	<script src="/admin/javascripts/00-basic/calendar2.js"></script>
+	<script>
+		var obj = {
+			dom: {
+				calendar: document.querySelector("#calendar"),
+				prevMonthBtn: document.querySelector("#prev"),
+				nextMonthBtn: document.querySelector("#next"),
+			},
+		}
+		const calendar = new CalendarGenerator(obj)
+
+		var m300class = []
+		var m400class_reserve = []
+		var dailyPersonCount = []
+		moment.locale("ja");
+		window.addEventListener("DOMContentLoaded", async () => {
+			m300class = await api.getClass(calendar.year, calendar.month)
+			m400class_reserve = await api.getClassReserve(calendar.year, calendar.month, "<%= p_id %>")
+			dailyPersonCount = await api.getDailyPersonCount(calendar.year, calendar.month)
+			await calendar.showCalendar()
+			await displaySchedule()
+			await displayDate()
+		});
+		// ===========================================================================================
+		// カレンダー関連==============================================================================
+		/* 日程 表示 */
+		async function displaySchedule() {
+			var all_date = document.querySelectorAll(`[data-date]`);
+			for (const e of all_date) {
+				e.dataset.toggle = "modal"
+				e.dataset.target = "#modal00"
+			}
+
+			for (var e of m400class_reserve) {
+				if (!e.start_date) continue
+				var start_date = e.start_date.split(" ")
+				var date = start_date[0]
+				var time = start_date[1]
+
+				var cell = document.querySelector(`[data-date="${date}"] > div`);
+				if (!cell) continue
+				cell.innerHTML += `<div class="_calendar-label">${time.substr(0, 5)}</div> `
+			}
+
+			setModal()
+		}
+
+		/* カレンダー表示 */
+		async function displayDate() {
+			document.querySelector("#date-display").innerHTML = calendar.year + '/' + calendar.month
+		}
+
+		/* カレンダー切り替え */
+		calendar.prevMonthBtn.addEventListener('click', () => {
+			displaySchedule()
+			displayDate()
+		})
+		calendar.nextMonthBtn.addEventListener('click', () => {
+			displaySchedule()
+			displayDate()
+		})
+
+		/* ================================================================================= */
+		/* モーダルの設定==================================================================== */
+		var selectedDate = ""
+
+		async function setModal() {
+			var calendar_td = document.querySelectorAll('[data-target="#modal00"]')
+			calendar_td.forEach(e => {
+				e.addEventListener('click', () => {
+					selectedDate = e.dataset.date;
+					setModal00(selectedDate)
+					setModal01(selectedDate)
+				})
+			});
+		}
+		/* 授業予定モーダル (modal00) */
+		function setModal00(d) {
+			var reserve = m400class_reserve.filter(e => e.start_date?.split(" ")[0] == d);
+
+			var h = ""
+			var display_date = moment(d, "YYYY-MM-DD").format('YYYY/MM/DD(ddd)')
+			document.querySelector("#modal00-date").innerHTML = display_date
+
+			for (var e of reserve) {
+				var start_date = moment(e.start_date, "YYYY-MM-DD HH:mm:ss").format('HH:mm')
+				h += `
+					<div class="text-primary mb-2" style="font-size: 16px;">
+						<span class="bg-primary py-1 ps-1 m-1"></span>
+						<span class="btn btn-outline-info" data-toggle="modal" data-target="#modal02" data-c_id="${e.c_id}" data-reserve_id="${e.id}">
+							${start_date + " ～ " + e.end_time?.substr(0, 5) + "　" + e.s_first_name + " さん"}
+						</span>
+					</div>`
+			}
+			document.querySelector('#modal00-content').innerHTML = h;
+
+			/* 予定の確認・取り消し */
+			var elm = document.querySelectorAll('[data-target="#modal02"]')
+			elm.forEach(e => {
+				e.addEventListener('click', () => {
+					var reserve_id = e.dataset.reserve_id;
+					setModal02(selectedDate, reserve_id)
+				})
+			});
+		}
+		/* 授業予約モーダル (modal01) */
+		function setModal01(d) {
+			var display_date = moment(d, "YYYY-MM-DD").format('YYYY/MM/DD(ddd)')
+			document.querySelector("#modal01-date").innerHTML = display_date
+
+			var c_id_select = document.querySelector("select[name='c_id']")
+			var selected_s_id = document.querySelector("select[name='s_id']").value
+
+			var jugyoTimeArr = m300class.filter(e => moment(e.start_date).format('YYYY-MM-DD') == d)
+
+			var html = ""
+			for (const e of jugyoTimeArr) {
+				/* 生徒が予約済みかどうか */
+				var isReserved = m400class_reserve.some(el => el.c_id == e.c_id && el.s_id == selected_s_id);
+				var style = ""
+				var disabled = ""
+				if (isReserved) style += "background: #0ff"
+				else if (e.s_co > e.t_co * 20) style += "background: red"
+				else if (e.s_co == e.t_co * 20) style += "background: #ccc"
+
+				if (e.s_co >= e.t_co * 20 || isReserved) disabled = "disabled"
+
+				var start_time = moment(e.start_date).format('HH:mm')
+				html += `<option value="${e.c_id}" style="${style}" ${disabled}>${start_time}　${e.s_co}/${e.t_co * 20}</option>`
+			}
+			c_id_select.innerHTML = html
+		}
+		document.querySelector("select[name='s_id']").addEventListener('change', () => {
+			setModal01(selectedDate)
+		})
+		/* 予約確認・取り消しモーダル (modal02) */
+		function setModal02(d, reserve_id) {
+			var e = m400class_reserve.filter(e => e.id == reserve_id)[0];
+
+			var display_date = moment(d, "YYYY-MM-DD").format('YYYY/MM/DD(ddd)')
+			var start_time = moment(e.start_date, "YYYY-MM-DD HH:mm:ss").format('HH:mm')
+
+			document.querySelector("#modal02-date").innerHTML = display_date + " " + start_time
+			document.querySelector("#modal02-student-name").innerHTML = e.s_first_name + " さん"
+
+			document.querySelector("#modal02 input[name='reserve_id']").value = reserve_id
+		}
+	</script>
+</body>
+
+</html>

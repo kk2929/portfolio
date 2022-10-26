@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+
+<% var pageName = `保護者：編集` %>
+
+<head>
+	<% var opt = {
+		pageName: pageName,
+	}; %>
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/head-tag`, opt) %>
+
+	<!-- 郵便番号 自動入力 -->
+	<script src="https://yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+
+		<!-- ヘッダー -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/header`, opt) %>
+
+		<!-- Main Sidebar Container -->
+		<% var opt = {
+			userName: session.name,
+			activeId: "parents", 
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/sidebar`, opt) %>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" style="min-height: auto;">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0"><%= pageName %></h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<!-- <li class="breadcrumb-item"><a href="/admin/">ホーム</a></li> -->
+								<li class="breadcrumb-item"><a href="/admin/<%= filepath %>/index/">保護者：一覧</a></li>
+								<li class="breadcrumb-item active">編集</li>
+							</ol>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="mb-2">
+						<!-- <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-column"> -->
+						<!-- <button class="btn btn-success" onclick="location.href='/admin/student/add/'">生徒登録</button> -->
+					</div>
+					<div class="row" style="width: max-content;">
+						<!-- <div class="col-12 col-sm-6"> -->
+						<div class="card card-primary card-outline card-outline-tabs">
+							<div class="card-header p-0 border-bottom-0">
+								<ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+									<!-- タブのヘッダー -->
+									<li class="nav-item">
+										<a class="nav-link active" id="custom-tabs-four-parents-tab" data-toggle="pill" href="#custom-tabs-four-parents" role="tab" aria-controls="custom-tabs-four-parents" aria-selected="true"><%= rows.family_name %> <%= rows.first_name %></a>
+									</li>
+									<% for (var i in studentArr) { %>
+									<% var e = studentArr[i] %>
+									<li class="nav-item">
+										<a class="nav-link" id="custom-tabs-four-<%= i %>-tab" data-toggle="pill" href="#custom-tabs-four-<%= i %>" role="tab" aria-controls="custom-tabs-four-<%= i %>" aria-selected="true"><%= e.s_first_name %></a>
+									</li>
+									<% } %>
+									<li class="nav-item">
+										<a class="nav-link text-success" id="custom-tabs-four-add_student-tab" data-toggle="pill" href="#custom-tabs-four-add_student" role="tab" aria-controls="custom-tabs-four-add_student" aria-selected="true">
+											<i class="fa-solid fa-user-plus"></i> 生徒を追加
+										</a>
+									</li>
+								</ul>
+							</div>
+							<div class="card-body">
+								<div class="tab-content" id="custom-tabs-four-tabContent">
+									<!-- 保護者========================================================================== -->
+									<div class="tab-pane fade show active" id="custom-tabs-four-parents" role="tabpanel" aria-labelledby="custom-tabs-four-parents-tab">
+										<span>●保護者</span>
+										<form method="post" action="" class="h-adr" name="parents_form">
+											<table class="table table-bordered mb-1 _table">
+												<tbody>
+													<tr>
+														<td><span>苗字/名前</span></td>
+														<td>
+															<input type="text" class="mr-3" name="family_name" autofocus required value="<%= rows.family_name %>">
+															<input type="text" name="first_name" required value="<%= rows.first_name %>">
+														</td>
+													</tr>
+													<tr>
+														<td><span>カナ苗字/名前</span></td>
+														<td>
+															<input type="text" class="mr-3" name="kana_family_name" required value="<%= rows.kana_family_name %>">
+															<input type="text" name="kana_first_name" required value="<%= rows.kana_first_name %>">
+														</td>
+													</tr>
+													<tr>
+														<td><span>続柄</span></td>
+														<td>
+															<input type="text" name="relationship" value="<%= rows.relationship %>" list="relationship_list">
+															<datalist id="relationship_list">
+																<option value="父">
+																<option value="母">
+																<option value="祖父">
+																<option value="祖母">
+																<option value="その他">
+															</datalist>
+														</td>
+													</tr>
+													<!-- !未修整：他人との重複を防ぐ -->
+													<tr>
+														<td><span>ログインID</span></td>
+														<td>
+															<input type="text" name="login_id" required value="<%= rows.login_id %>">
+														</td>
+													</tr>
+													<tr>
+														<td><span>パスワード</span></td>
+														<td>
+															<input type="text" name="password" required value="<%= rows.password %>">
+														</td>
+													</tr>
+													<tr>
+														<td><span>メールアドレス</span></td>
+														<td><input type="email" name="mail" value="<%= rows.mail %>" style="width: 300px;"></td>
+													</tr>
+													<tr>
+														<td><span>電話番号</span></td>
+														<td><input type="tel" name="tel" value="<%= rows.tel %>"></td>
+													</tr>
+													<tr>
+														<td><span>郵便番号</span></td>
+														<td>
+															<span class="p-country-name" style="display:none;">Japan</span>
+															<input type="text" name="post_code" value="<%= rows.post_code %>" class="p-postal-code" minlength="7" maxlength="8">
+														</td>
+													</tr>
+													<tr>
+														<td><span>住所</span></td>
+														<td>
+															<div>
+																<input type="text" name="address1" value="<%= rows.address1 %>" style="width: 250px;" class="p-region p-locality p-street-address p-extended-address" readonly>
+															</div>
+															<div>
+																<input type="text" name="address2" value="<%= rows.address2 %>" style="width: 500px;">
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td><span>契約状態</span></td>
+														<td style="display: flex;">
+															<div class="radio-btns">
+																<label>未契約<input type="radio" name="state" value="1" required></label>
+																<label>契約中<input type="radio" name="state" value="2"></label>
+																<label>一時休会<input type="radio" name="state" value="3"></label>
+																<label>契約満了<input type="radio" name="state" value="4"></label>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<% var d = rows.contract_date %>
+														<% d = d ? d.toFormat('YYYY-MM-DD') :'' %>
+														<td><span>契約日</span></td>
+														<td><input type="date" name="contract_date" value="<%= d %>"></td>
+													</tr>
+													<tr>
+														<% var d = rows.contract_expiration_date %>
+														<% d = d ? d.toFormat('YYYY-MM-DD') :'' %>
+														<td><span>契約満了日</span></td>
+														<td><input type="date" name="contract_expiration_date" value="<%= d %>"></td>
+													</tr>
+													<tr>
+														<td><span>備考</span></td>
+														<td><textarea name="remarks" rows="6" cols="70"><%= rows.remarks %></textarea></td>
+													</tr>
+												</tbody>
+											</table>
+
+											<div>
+												<!-- <button class="btn btn-success" type="button" onclick="submitForm()">
+													<i class="fa fa-lg fa-circle-check"></i> 更新
+												</button> -->
+												<button class="btn btn-success" type="submit" onclick="return editConfirm()">
+													<i class="fa fa-lg fa-circle-check"></i> 更新
+												</button>
+												<button class="btn btn-warning btn-sm float-sm-right" type="submit" formaction="./delete/" onclick="return deleteConfirm('parents')">
+													<i class="fa fa-lg fa-trash-can"></i> 削除
+												</button>
+											</div>
+										</form>
+									</div>
+									<!-- 生徒============================================================================ -->
+									<% for (var i in studentArr) { %>
+									<% i = Number(i) %>
+									<% var e = studentArr[i] %>
+									<div class="tab-pane fade" id="custom-tabs-four-<%= i %>" role="tabpanel" aria-labelledby="custom-tabs-four-<%= i %>-tab">
+										<span>●生徒<%= i + 1 %></span>
+										<form method="post" action="" name="student_form_<%= e.s_id %>">
+											<table class="table table-bordered mb-1 _table">
+												<tbody class="student<%= i %>">
+													<tr>
+														<td><span>苗字/名前</span></td>
+														<td>
+															<input type="text" class="mr-3" name="s_family_name" autofocus required value="<%= e.s_family_name %>">
+															<input type="text" name="s_first_name" required value="<%= e.s_first_name %>">
+														</td>
+													</tr>
+													<tr>
+														<td><span>カナ苗字/名前</span></td>
+														<td>
+															<input type="text" class="mr-3" name="s_kana_family_name" required value="<%= e.s_kana_family_name %>">
+															<input type="text" name="s_kana_first_name" required value="<%= e.s_kana_first_name %>">
+														</td>
+													</tr>
+													<tr>
+														<td><span>性別</span></td>
+														<td style="display: flex;">
+															<div class="radio-btns">
+																<label>男<input type="radio" name="gender" value="m" required></label>
+																<label>女<input type="radio" name="gender" value="f"></label>
+																<label>その他<input type="radio" name="gender" value="o"></label>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td><span>学年</span></td>
+														<td style="display: flex;">
+															<div class="radio-btns">
+																<label>1 年<input type="radio" name="grade" value="1" required></label>
+																<label>2 年<input type="radio" name="grade" value="2"></label>
+																<label>3 年<input type="radio" name="grade" value="3"></label>
+																<label>4 年<input type="radio" name="grade" value="4"></label>
+																<label>5 年<input type="radio" name="grade" value="5"></label>
+																<label>6 年<input type="radio" name="grade" value="6"></label>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<% var d = e.birthday %>
+														<% d = d ? d.toFormat('YYYY-MM-DD') :'' %>
+														<td><span>誕生日</span></td>
+														<td><input type="date" name="birthday" value="<%= d %>"></td>
+													</tr>
+													<tr>
+														<td><span>学校名</span></td>
+														<td>
+															<input type="text" name="school" value="<%= e.school %>">
+														</td>
+													</tr>
+													<tr>
+														<td><span>契約状態</span></td>
+														<td style="display: flex;">
+															<div class="radio-btns" onchange="onSwitchS_state('<%= i %>')" id="s_state<%= i %>">
+																<label>未契約<input type="radio" name="s_state" value="1" required></label>
+																<label>契約中<input type="radio" name="s_state" value="2"></label>
+																<label>一時休会<input type="radio" name="s_state" value="3"></label>
+																<label>契約満了<input type="radio" name="s_state" value="4"></label>
+															</div>
+														</td>
+													</tr>
+													<tr id="course<%= i %>">
+														<td><span>コース</span></td>
+														<td style="display: flex;">
+															<div class="radio-btns">
+																<label>集団自学ライト<input type="radio" name="course" value="1"></label>
+																<label>集団自学<input type="radio" name="course" value="2"></label>
+																<label>個別学習<input type="radio" name="course" value="3"></label>
+															</div>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+
+											<div>
+												<button class="btn btn-success" type="submit" formaction="./edit-student/<%= e.s_id %>/" onclick="return editConfirm()">
+													<i class="fa fa-lg fa-circle-check"></i> 更新
+												</button>
+												<button class="btn btn-warning btn-sm float-sm-right" type="submit" formaction="./delete-student/<%= e.s_id %>/" onclick="return deleteConfirm()">
+													<i class="fa fa-lg fa-trash-can"></i> 削除
+												</button>
+											</div>
+										</form>
+									</div>
+									<% } %>
+									<!-- 生徒の追加============================================================================ -->
+									<div class="tab-pane fade" id="custom-tabs-four-add_student" role="tabpanel" aria-labelledby="custom-tabs-four-add_student-tab">
+										<span>●新規の生徒</span>
+										<form method="post" action="" name="student_form_new">
+											<table class="table table-bordered mb-1 _table">
+												<tbody>
+													<tr>
+														<td><span>苗字</span></td>
+														<td><input type="text" name="s_family_name" autofocus required value="<%= rows.family_name %>"></td>
+													</tr>
+													<tr>
+														<td><span>名前</span></td>
+														<td><input type="text" name="s_first_name" required></td>
+													</tr>
+													<tr>
+														<td><span>性別</span></td>
+														<td style="display: flex;">
+															<div class="radio-btns">
+																<label>男<input type="radio" name="gender" value="m" required></label>
+																<label>女<input type="radio" name="gender" value="f"></label>
+																<label>その他<input type="radio" name="gender" value="o"></label>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td><span>学年</span></td>
+														<td style="display: flex;">
+															<div class="radio-btns">
+																<label>1 年<input type="radio" name="grade" value="1" required></label>
+																<label>2 年<input type="radio" name="grade" value="2"></label>
+																<label>3 年<input type="radio" name="grade" value="3"></label>
+																<label>4 年<input type="radio" name="grade" value="4"></label>
+																<label>5 年<input type="radio" name="grade" value="5"></label>
+																<label>6 年<input type="radio" name="grade" value="6"></label>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td><span>誕生日</span></td>
+														<td><input type="date" name="birthday"></td>
+													</tr>
+													<tr>
+														<td><span>学校名</span></td>
+														<td>
+															<input type="text" name="school">
+														</td>
+													</tr>
+													<tr>
+														<td><span>契約状態</span></td>
+														<td style="display: flex;">
+															<div class="radio-btns" onchange="onSwitchS_state('_add_student')" id="s_state_add_student">
+																<label>未契約<input type="radio" name="s_state" value="1" required></label>
+																<label>契約中<input type="radio" name="s_state" value="2"></label>
+																<label>一時休会<input type="radio" name="s_state" value="3"></label>
+																<label>契約満了<input type="radio" name="s_state" value="4"></label>
+															</div>
+														</td>
+													</tr>
+													<tr id="course_add_student">
+														<td><span>コース</span></td>
+														<td style="display: flex;">
+															<div class="radio-btns">
+																<label>集団自学ライト<input type="radio" name="course" value="1"></label>
+																<label>集団自学<input type="radio" name="course" value="2"></label>
+																<label>個別学習<input type="radio" name="course" value="3"></label>
+															</div>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+
+											<div>
+												<button class="btn btn-success" type="submit" formaction="./add-student/" onclick="return editConfirm()">
+													<i class="fa-solid fa-user-plus"></i> 生徒を追加
+													<!-- <i class="fa fa-lg fa-circle-check"></i> 更新 -->
+												</button>
+											</div>
+										</form>
+									</div>
+									<!-- タブ -->
+								</div>
+							</div>
+							<!-- /.card -->
+						</div>
+					</div>
+					<!-- /.row -->
+				</div>
+				<!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/footer`, opt) %>
+	</div>
+	<!-- ./wrapper -->
+
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/foot-tag`, opt) %>
+
+	<!-- フォームの必須入力 -->
+	<script src="/admin/javascripts/99-etc/required-form.js"></script>
+
+	<script>
+		window.addEventListener("DOMContentLoaded", () => {
+			$('input:radio[name="state"]').val(["<%= rows.state %>"]);
+			"<% for (var i in studentArr) { %>"
+			"<% var e = studentArr[i] %>"
+			$(`.student<%= i %> input:radio[name="gender"]`).val(["<%= e.gender %>"]);
+			$(`.student<%= i %> input:radio[name="grade"]`).val(["<%= e.grade %>"]);
+			$(`.student<%= i %> input:radio[name="s_state"]`).val(["<%= e.s_state %>"]);
+			$(`.student<%= i %> input:radio[name="course"]`).val(["<%= e.course %>"]);
+			onSwitchS_state('<%= i %>')
+			"<% } %>"
+		});
+		/* ラジオボタンによる表示切り替え */
+		function onSwitchS_state(i) {
+			var $radio = $(`#s_state${i} input[name="s_state"`)
+
+			if ($radio.eq(1).is(':checked')) {
+				document.getElementById(`course${i}`).style.visibility = "visible";
+			} else {
+				document.getElementById(`course${i}`).style.visibility = "hidden";
+			}
+
+			// var $content = $(`.${name}-content`)
+			// フォームの値リセット
+			// $(`.${name}-value`).val("");
+
+			// var r = $radio.eq(i)
+			// var c = $content.eq(i)
+
+			// if (r.is(':checked')) {
+			// c.css("display", "");
+			// } else {
+			// c.css("display", "none");
+			// }
+		}
+
+		// アップロード処理ここから
+		/* フォーム送信 */
+		function clickSubmit() {
+			submitParentsForm()
+		}
+		/* サーバーと通信 */
+		async function connectToServer(url, body) {
+			return new Promise((resolve, reject) => {
+				fetch(`./${url}`, {
+					method: 'POST',
+					body: body
+				}).then(res => {
+					if (!res.ok) return res.json().then(error => { throw new Error(error.msg) });
+					return res.json();
+				}).then(json => {
+					resolve(json);
+				}).catch(err => {
+					removeLoading();
+					document.getElementById("message").innerHTML = err;
+					reject();
+				});
+			});
+		}
+		/* .js の "/" へ。フォーム全てを送信 */
+		function submitParentsForm() {
+			document.parents_form.submit();
+		}
+		// フォーム送信処理ここまで
+
+		function editConfirm() {
+			if (window.confirm("変更した内容を確定しますか？")) return true;
+			else return false;
+		}
+		function deleteConfirm(kind = null) {
+			var str = "本当に削除しますか？"
+			if (kind == "parents") str += "\n\nこの保護者の生徒も全て削除されます。"
+			if (window.confirm(str)) return true; // OKで削除を実行
+			else return false; // キャンセルで削除を中止
+		}
+	</script>
+</body>
+
+</html>

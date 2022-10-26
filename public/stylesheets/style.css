@@ -1,0 +1,188 @@
+body {
+	/* padding: 50px; */
+	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+	color: #00b7ff;
+}
+
+pre {
+	margin: 0;
+	padding: 0;
+}
+
+label {
+	margin-bottom: 0 !important;
+}
+
+/* カーソル */
+._pointer {
+	cursor: pointer;
+}
+
+/* ログアウトボタン */
+.logout-btn {
+	min-width: 80px;
+	height: 40px;
+	margin: 5px;
+	padding: 0 14px;
+	border: none;
+	border-radius: 4px;
+	background-color: #1a73e8;
+	color: #fff;
+	font-size: 14px !important;
+	cursor: pointer;
+	transition: .4s;
+}
+.logout-btn:hover {
+	border-color: #fff;
+	background-color: #2a83f8;
+	color: #fff;
+}
+
+/* 子要素を中央寄せ */
+._text-center-child * {
+	text-align: center;
+}
+
+/* ========================== カレンダー ============================ */
+._calendar00 {
+	border-radius: 5px;
+	border-collapse: separate;
+	border-spacing: 0;
+}
+._calendar00 th {
+	width: 70px;
+	background-color: #eee;
+	text-align: center;
+}
+._calendar00 td {
+	padding: 5px 10px;
+	color: #666;
+	text-align: center;
+	vertical-align: top;
+}
+._calendar00, th, td {
+	border: solid 1px #777 ;
+}
+
+._calendar-label {
+	border-radius: 5px;
+	background-color: cyan;
+	color: #000;
+	cursor: pointer;
+}
+._calendar-label:not(:last-child) {
+	margin-bottom: 5px;
+}
+
+._calendar thead td {
+	width: 70px;
+}
+._calendar tbody td {
+	vertical-align: top;
+}
+._sunday {
+	background-color: #ff4a4b;
+	color: white;
+}
+._saturday {
+	background-color: #6a6aff;
+	color: white;
+}
+
+
+
+/* チェックボックス */
+input[type="checkbox"], label {
+	cursor: pointer;
+}
+
+/* ラジオボタン */
+.radio-btns {
+	display: flex;
+	font-size: 16px;
+}
+.radio-btns label {
+	margin: 0 5px;
+	padding: 5px;
+	border: 1px solid#000;
+	border-radius: 10px;
+	text-align: center;
+	cursor: pointer;
+}
+input[type="radio"] {
+	display: flex;
+	margin: auto;
+	cursor: pointer;
+}
+/******************************** input *******************************************/
+input[readonly] {
+	background-color: #777;
+	color: #eee;
+}
+/* ******************************* テーブル ****************************************** */
+._table {
+	width: max-content;
+	overflow: hidden;
+	border-radius: 5px;
+	table-layout: auto;
+	border-collapse: separate;
+	/* border-collapse: separate !important; */
+	border-spacing: 0;
+}
+._table, th, td {
+	border: solid 1px #777;
+	/* border: solid 1px #777 !important; */
+}
+._table tr th {
+	position: sticky; /* スクロールに対して固定 */
+	top: 0; /* 固定場所を画面上部に指定 */
+	z-index: 5;
+	padding: 5px 10px;
+	background-color: #999;
+	color: #fff;
+	text-align: center;
+}
+._table tr th .fixed {
+	position: fixed;
+}
+._table .static th {
+	position: static;
+}
+._table tr td {
+	padding: 5px 10px;
+	color: #666;
+	text-align: left;
+	/* background-color: lawngreen; */
+}
+._table tr td img {
+	max-width: 100%;
+}
+._table tbody tr {
+	padding: 5px 10px;
+	background: #fff;
+	color: #666;
+	text-align: left;
+}
+._table tbody tr:nth-child(even) {
+	/* background: #f1f2f6; */
+}
+._table tbody tr:nth-child(odd) {
+	/* background: #d1d8e0; */
+}
+._table tbody[class="indexTable"]:hover > tr:hover td {
+	background: #00dd12;
+	color: rgb(98, 30, 255) !important;
+	cursor: pointer;
+}
+
+/* 授業予定テーブル（一日の詳細） */
+._class-list-table th {
+	text-align: center;
+	padding: .2rem .4rem;
+}
+._class-list-table td {
+	padding: .2rem .4rem;
+}

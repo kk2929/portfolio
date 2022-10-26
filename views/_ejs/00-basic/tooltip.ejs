@@ -1,0 +1,23 @@
+<div class="tooltip" style="width: auto;">
+	<img src="/manage/images/question-mark.png">
+	<% if (locals.width) { %>
+	<div class="description" style="width: <%= width %>px;"><%- tex %> </div>
+	<% } else { %>
+	<div class="description"><%- tex %> </div>
+	<% } %>
+</div>
+
+<script>
+	$('.tooltip')
+		.mouseover(function (e) {
+			// $(this).parent().css("background", "#000");
+			$(this).parent().css("z-index", "99999");
+		})
+		.mouseout(function (e) {
+			// $(this).parent().css("background", "red");
+			$(this).parent().css("z-index", "");
+		});
+
+	// $("*:has(.tooltip)").css("background", "#000");
+	// $("*:has(.tooltip)").css("z-index", "99999");
+</script>

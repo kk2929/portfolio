@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<% var pageName = `先生：シフト変更` %>
+
+<head>
+	<% var opt = {
+		pageName: pageName,
+	}; %>
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/head-tag`, opt) %>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+
+		<!-- ヘッダー -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/header`, opt) %>
+
+		<!-- Main Sidebar Container -->
+		<% var opt = {
+			userName: session.name,
+			activeId: "teacher", 
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/sidebar`, opt) %>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" style="min-height: auto;">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0"><%= pageName %></h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<!-- <li class="breadcrumb-item"><a href="/admin/">ホーム</a></li> -->
+								<li class="breadcrumb-item"><a href="/admin/<%= filepath %>/index/">先生：一覧</a></li>
+								<li class="breadcrumb-item active">編集</li>
+							</ol>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="mb-2">
+						<!-- <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-column"> -->
+						<!-- <button class="btn btn-success" onclick="location.href='/admin/student/add/'">生徒登録</button> -->
+					</div>
+					<div class="row" style="width: max-content;">
+						<!-- <div class="col-12 col-sm-6"> -->
+						<div class="card card-primary card-outline card-outline-tabs">
+							<div class="card-body">
+								<!-- <span>●シフト</span> -->
+
+								<div class="m-2 d-flex justify-content-center align-items-center">
+									<button id="prev" class="btn btn-sm btn-outline-secondary" type="button">前の月</button>
+									<div id="date-display" class="mx-3" style="font-size: 24px;"></div>
+									<button id="next" class="btn btn-sm btn-outline-secondary" type="button">次の月</button>
+								</div>
+								<div id="calendar"></div>
+							</div>
+							<!-- /.card -->
+						</div>
+					</div>
+					<!-- /.row -->
+				</div>
+				<!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<% var opt = {
+		}; %>
+		<%- include(`${RoutesPath}/../views/_ejs/03-header/footer`, opt) %>
+	</div>
+	<!-- ./wrapper -->
+
+	<!-- 授業予定 のモーダル (modal00) -->
+	<div class="modal fade" id="modal00">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">授業予定とシフト</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div id="modal00-date" class="mb-2" style="font-size: 16px;"></div>
+					<!-- ここに授業コマを表示する -->
+					<form method="post" id="form-update" name="form0">
+						<div id="modal00-content"></div>
+					</form>
+					<div class="mt-3">
+						<button type="button" class="btn btn-success ms-3" onclick="clickUpdate()">
+							<i class="fa fa-lg fa-circle-check"></i> シフトを変更する
+						</button>
+					</div>
+				</div>
+				<div class="modal-footer justify-content-between">
+					<button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<%- include(`${RoutesPath}/../views/_ejs/03-header/foot-tag`, opt) %>
+
+	<!-- api -->
+	<script src="/admin/javascripts/02-api/class.js"></script>
+	<!-- カレンダー -->
+	<script src="/admin/javascripts/00-basic/calendar2.js"></script>
+	<script>
+		var t_id = Number("<%= t_id %>")
+		var obj = {
+			dom: {
+				calendar: document.querySelector("#calendar"),
+				prevMonthBtn: document.querySelector("#prev"),
+				nextMonthBtn: document.querySelector("#next"),
+			},
+		}
+		const calendar = new CalendarGenerator(obj)
+
+		var m300class = []
+		moment.locale("ja");
+		window.addEventListener("DOMContentLoaded", async () => {
+			// m300class = await api.getClass(calendar.year, calendar.month)
+			m300class = await api.getClassWithTeacher_shift(calendar.year, calendar.month, t_id)
+			await calendar.showCalendar()
+			await displaySchedule()
+			await displayDate()
+		});
+		// ===========================================================================================
+		// カレンダー関連==============================================================================
+		/* 日程 表示 */
+		async function displaySchedule() {
+			var all_date = document.querySelectorAll(`[data-date]`);
+			for (const e of all_date) {
+				e.dataset.toggle = "modal"
+				e.dataset.target = "#modal00"
+			}
+
+			for (var e of m300class) {
+				if (!e.start_date) continue
+				var start_date = e.start_date.split(" ")
+				var date = start_date[0]
+				var time = start_date[1]
+
+				var cell = document.querySelector(`[data-date="${date}"] > div`);
+				if (!cell) continue
+				var p = e.s_co / (e.t_co * 20) * 100
+				var style = ""
+				if (e.this_shift_co >= 1) {
+					// style += "background: red;"
+				} else {
+					style += "background: gray;"
+				}
+				cell.innerHTML += `
+				<div class="m-auto" style="width: max-content;">
+					<span class="_calendar-label" style="${style}">
+						${time.substr(0, 5)}
+					</span>
+				<div>`
+			}
+
+			setModal()
+		}
+
+		/* カレンダー表示 */
+		async function displayDate() {
+			document.querySelector("#date-display").innerHTML = calendar.year + '/' + calendar.month
+		}
+
+		/* カレンダー切り替え */
+		calendar.prevMonthBtn.addEventListener('click', () => {
+			displaySchedule()
+			displayDate()
+		})
+		calendar.nextMonthBtn.addEventListener('click', () => {
+			displaySchedule()
+			displayDate()
+		})
+
+		/* ================================================================================= */
+		/* モーダルの設定==================================================================== */
+		// var selectedDate = ""
+		async function setModal() {
+			var calendar_td = document.querySelectorAll('[data-target="#modal00"]')
+			calendar_td.forEach(e => {
+				e.addEventListener('click', () => {
+					selectedDate = e.dataset.date;
+					setModal00(selectedDate)
+				})
+			});
+		}
+		/* 授業予定モーダル */
+		function setModal00(d) {
+			var reserve = m300class.filter(e => e.start_date.split(" ")[0] == d);
+
+			var h = ""
+			var display_date = moment(d, "YYYY-MM-DD").format('YYYY/MM/DD(ddd)')
+			document.querySelector("#modal00-date").innerHTML = display_date
+
+			h += `
+				<table class="_class-list-table">
+					<tr>
+						<th></th>
+						<th>時刻</th>
+						<th>予約<br>生徒数</th>
+						<th>最大<br>生徒数</th>
+					</tr>`
+			for (var e of reserve) {
+				var start_date = moment(e.start_date, "YYYY-MM-DD HH:mm:ss").format('HH:mm')
+
+				var checked = ""
+				if (e.this_shift_co >= 1) checked = "checked"
+
+				h += `
+					<tr class="_pointer" onclick="selectCheckbox(this)">
+						<td>
+							<label>
+								<input type="checkbox" name="c_id" value="${e.c_id}" ${checked}>
+								<input type="hidden" name="hidden_c_id" value="${e.c_id}">
+							</label>
+						</td>
+						<td>
+							${start_date} ～ ${e.end_time?.substr(0, 5)}
+						</td>
+						<td>
+							${e.s_co}人
+						</td>
+						<td>
+							${e.t_co * 20}人
+						</td>
+					</tr>`
+			}
+			h += `</table>`
+			document.querySelector('#modal00-content').innerHTML = h;
+		}
+		function selectCheckbox(e) {
+			console.log(e);
+			var el = e.querySelector("input[type='checkbox']")
+			console.log(el);
+			el.checked = !el.checked
+		}
+
+		/* ================================================================================= */
+		/* フォーム送信==================================================================== */
+		function clickUpdate() {
+			// console.log("バリデーション 開始");
+			// if (!$('#form-add')[0].reportValidity()) return
+			if (!window.confirm("シフトを変更します。\nよろしいですか？")) return;
+
+			var form = document.querySelector("#form-update");
+			form.action = 'update';
+			form.submit();
+		}
+	</script>
+</body>
+
+</html>
