@@ -204,7 +204,6 @@
 		}
 	</script>
 
-	<!-- <script src="/admin/javascripts/00-basic/calendar.js"></script> -->
 	<!-- api -->
 	<script src="/admin/javascripts/02-api/class.js"></script>
 	<!-- カレンダー -->
@@ -237,8 +236,6 @@
 		async function displaySchedule() {
 			var all_date = document.querySelectorAll(`[data-date]`);
 			for (const e of all_date) {
-				console.log(e.dataset.date);
-				console.log(m300class[0].start_date.slice(0, 10));
 				var existClass = m300class.filter(el => el.start_date.slice(0, 10) == e.dataset.date).length >= 1
 				if (existClass) {
 					e.dataset.toggle = "modal"

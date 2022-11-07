@@ -14,7 +14,7 @@ router.get('/', async (req, res, next) => {
 		var generateStartDate = moment(rows[0].exe_date).add(1, 'days')//.format("YYYY-MM-DD")
 
 		// var finish_date = moment().add(1, 'days').format("YYYY年MM月DD日 HH時mm分s秒 d dd ddd dddd")
-		var finish_date = moment().add(3, 'month')//.format("YYYY-MM-DD")
+		var finish_date = moment().add(1, 'month')//.format("YYYY-MM-DD")
 
 		while (generateStartDate.isBefore(finish_date)) {
 			var d1 = generateStartDate.format("YYYY-MM-DD")
