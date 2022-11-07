@@ -119,7 +119,7 @@ time = "0 0 2 * * *"	// 毎日2時
 // time = "0 0 0 1 * *"	// 毎月 1日 00:00:00
 
 cron.schedule(time, async () => {
-	// return;
+	return;
 	var today = new Date().toFormat('YYYY-MM-DD HH24:MI:SS');
 	console.log("処理日時：", today)
 
@@ -127,13 +127,7 @@ cron.schedule(time, async () => {
 		var exe_date = new Date()
 
 		var connection = await Mysql2.createConnection(DBSetting);
-		// var [rows, fields] = await connection.query("delete from analysis_course_time;");
 		await connection.beginTransaction();
-
-		var sampleLog = await getSampleLog(connection, exe_date)
-
-		console.log("update 開始-----------------------------");
-		await updateExeDate(connection, exe_date)
 
 		await connection.commit();
 	}

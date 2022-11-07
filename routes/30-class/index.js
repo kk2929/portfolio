@@ -24,11 +24,17 @@ router.post('/', async (req, res, next) => {
 router.post('/add', async (req, res, next) => {
 	try {
 		var obj = { ...req.body }
+		console.log(obj);
 		for (var e of Object.keys(obj)) {
 			if (obj[e] == '') obj[e] = null;
 		}
 		obj.s_co = 0
 		obj.t_co = 0
+
+		obj.start_date = `${obj.start_date_0} ${obj.start_time}`
+		delete obj.start_date_0
+		delete obj.start_time
+		console.log(obj);
 
 		var connection = await Mysql2.createConnection(DBSetting);
 		var sql = `

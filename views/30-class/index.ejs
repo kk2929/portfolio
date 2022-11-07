@@ -103,7 +103,7 @@
 
 	<!-- 授業を追加する のモーダル (modal01) -->
 	<div class="modal fade" id="modal01">
-		<div class="modal-dialog modal-sm">
+		<div class="modal-dialog modal-md">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h4 class="modal-title">授業の追加</h4>
@@ -112,23 +112,44 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<form method="post" id="modal01-form" name="form0">
-						<div class="mb-3">
-							<label class="form-label">授業開始時刻</label>
-							<div class="row align-items-center g-3">
-								<span id="modal01-date" class="col-auto" style="font-size: 16px;"></span>
-								<select class="form-select col" name="start_date" required>
-									<!-- <option>開始時刻を選択してください</option> -->
-								</select>
-								<input type="hidden" name="end_time">
+					<div class="mb-3">
+						<div class="radio-btns mb-2" onchange="displaySwitch('input-type-start_date')">
+							<label>
+								<input type="radio" name="input-type-start_date" value="select" checked>選択
+							</label>
+							<label>
+								<input type="radio" name="input-type-start_date" value="free">自由入力
+							</label>
+						</div>
+						<form method="post" id="modal01-form" name="form0">
+							<input type="hidden" name="start_date_0">
+							<label class="form-label">授業時刻</label>
+							<div style="display: flex; align-items: center;">
+								<div id="modal01-date" class="col-auto" style="font-size: 16px;"></div>
+								<div id="input-type-start_date" style="margin: auto .4rem;">
+									<div id="input-type-start_date-select">
+										<div class="row align-items-center g-3">
+											<select class="form-select col" name="start_time" required>
+												<!-- <option>開始時刻を選択してください</option> -->
+											</select>
+											<input type="hidden" name="end_time">
+										</div>
+									</div>
+									<div id="input-type-start_date-free" class="display-non">
+										<div class="row align-items-center g-3">
+											<input class="form-select" type="time" name="start_time" value="18:00" required>～
+											<input class="form-select" type="time" name="end_time" value="19:00" required>
+										</div>
+									</div>
+								</div>
 							</div>
-						</div>
-						<div>
-							<button class="btn btn-success ms-3" type="button" onclick="clickAdd()">
-								<i class="fa fa-lg fa-circle-check"></i> 追加する
-							</button>
-						</div>
-					</form>
+						</form>
+					</div>
+					<div>
+						<button class="btn btn-success ms-3" type="button" onclick="clickAdd()">
+							<i class="fa fa-lg fa-circle-check"></i> 追加する
+						</button>
+					</div>
 				</div>
 				<div class="modal-footer justify-content-between">
 					<button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
@@ -291,12 +312,14 @@
 		function setModal01(d) {
 			var display_date = moment(d, "YYYY-MM-DD").format('YYYY/MM/DD(ddd)')
 			document.querySelector("#modal01-date").innerHTML = display_date
+			document.querySelector("[name='start_date_0']").value = d
 
-			var date_select = document.querySelector("select[name='start_date']")
+			var date_select = document.querySelector("select[name='start_time']")
 			var weekday = moment(d).day()
 
 			var html = ""
 			for (let i = 10; i < 20; i++) {
+				var start_time = `${i}:00:00`
 				var start_date = `${d} ${i}:00:00`
 				var isReserved = m300class.find(e => e.start_date == start_date)
 				var opt = ""
@@ -304,12 +327,12 @@
 				if (isReserved) opt += "disabled"
 				if (isReserved) style += "background: #ddd"
 
-				html += `<option ${opt} style="${style}" value="${start_date}">${i}:00 ~</option>`
+				html += `<option ${opt} style="${style}" value="${start_time}">${i}:00 ~</option>`
 			}
 			date_select.innerHTML = html
 			setEndTime('a 10:00:00')
 		}
-		document.querySelector("select[name='start_date']").addEventListener('change', (e) => {
+		document.querySelector("select[name='start_time']").addEventListener('change', (e) => {
 			setEndTime(e.target.value)
 		})
 		function setEndTime(start_date) {
@@ -323,11 +346,25 @@
 		}
 
 		/* ================================================================================= */
+		/* ラジオボタンによる表示切り替え==================================================================== */
+		function displaySwitch(name) {
+			var val = document.querySelector(`[name="${name}"]:checked`).value
+			console.log(val);
+			var elms = document.querySelectorAll(`#${name} > *`)
+			elms.forEach(e => e.classList.add(`display-non`));
+			document.querySelector(`#${name}-${val}`).classList.remove(`display-non`)
+		}
+
+		/* ================================================================================= */
 		/* フォーム送信==================================================================== */
 		function clickAdd() {
 			console.log("バリデーション 開始");
+			/* 課題：非表示のinputのrequiredも判定してしまう */
 			if (!$('#modal01-form')[0].reportValidity()) return
 			if (!window.confirm("授業を追加します。\nよろしいですか？")) return;
+
+			var displayNon = document.querySelectorAll(".display-non")
+			displayNon.forEach(e => e.remove());
 
 			var form = document.querySelector("#modal01-form");
 			form.action = 'add';
