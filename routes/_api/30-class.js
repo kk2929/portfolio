@@ -79,10 +79,7 @@ router.post('/getDailyPersonCount', async (req, res, next) => {
 
 	var connection = await Mysql2.createConnection(DBSetting);
 	var sql = `
-		select t1.*,
-			count(t2.s_id) as s_co,
-			count(t3.t_id) as t_co,
-			date_format(t1.start_date, '%Y-%m-%d %T') as start_date
+		select t1.*
 		from m300class as t1
 		left join m400class_reserve as t2
 			on t1.c_id = t2.c_id 
@@ -90,7 +87,6 @@ router.post('/getDailyPersonCount', async (req, res, next) => {
 		left join m210teacher_shift as t3
 			on t1.c_id = t3.c_id 
 				and t3.status != 9
-		group by date_format(t1.start_date, '%Y%m%d')
 		order by t1.start_date
 		;`
 	var params = []

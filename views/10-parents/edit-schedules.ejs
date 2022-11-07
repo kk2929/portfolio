@@ -225,8 +225,10 @@
 		window.addEventListener("DOMContentLoaded", async () => {
 			m300class = await api.getClass(calendar.year, calendar.month)
 			m400class_reserve = await api.getClassReserve(calendar.year, calendar.month, "<%= p_id %>")
-			dailyPersonCount = await api.getDailyPersonCount(calendar.year, calendar.month)
+			// dailyPersonCount = await api.getDailyPersonCount(calendar.year, calendar.month)
+		console.log("dddd");
 			await calendar.showCalendar()
+			console.log("aaaa");
 			await displaySchedule()
 			await displayDate()
 		});

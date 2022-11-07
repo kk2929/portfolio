@@ -330,14 +330,15 @@
 				html += `<option ${opt} style="${style}" value="${start_time}">${i}:00 ~</option>`
 			}
 			date_select.innerHTML = html
-			setEndTime('a 10:00:00')
+			setEndTime('10:00:00')
 		}
 		document.querySelector("select[name='start_time']").addEventListener('change', (e) => {
 			setEndTime(e.target.value)
 		})
-		function setEndTime(start_date) {
-			var start_time = start_date.split(" ")[1]
+		function setEndTime(start_time) {
+			console.log(start_time);
 			var end_time = moment(start_time, 'HH:mm:ss').add(1, 'h').format('HH:mm:ss')
+			console.log(end_time);
 			document.querySelector("[name='end_time']").value = end_time
 		}
 		/* 授業削除モーダル */
